@@ -1,0 +1,154 @@
+--[[
+ __  __     __     _____     ______     ______     ______     __  __    
+/\ \/ /    /\ \   /\  __-.  /\  ___\   /\  ___\   /\  == \   /\ \_\ \   
+\ \  _"-.  \ \ \  \ \ \/\ \ \ \___  \  \ \ \____  \ \  __<   \ \____ \  
+ \ \_\ \_\  \ \_\  \ \____-  \/\_____\  \ \_____\  \ \_\ \_\  \/\_____\ 
+  \/_/\/_/   \/_/   \/____/   \/_____/   \/_____/   \/_/ /_/   \/_____/ 
+]]
+
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local MarketplaceService = game:GetService("MarketplaceService")
+local RunService = game:GetService("RunService")
+
+local startTime = tick()
+
+local themeRed = Color3.fromRGB(255, 60, 60)
+
+local gui = Instance.new("ScreenGui", game:GetService("CoreGui"))
+gui.Name = "Kidscry"
+gui.IgnoreGuiInset = true
+gui.ResetOnSpawn = false
+
+local container = Instance.new("Frame", gui)
+container.AnchorPoint = Vector2.new(0.5, 0.5)
+container.Position = UDim2.new(0.5, 0, 0.5, 0)
+container.Size = UDim2.new(0, 300, 0, 80)
+container.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+container.BorderSizePixel = 0
+Instance.new("UICorner", container).CornerRadius = UDim.new(0, 8)
+
+local loadingText = Instance.new("TextLabel", container)
+loadingText.Size = UDim2.new(1, 0, 0, 24)
+loadingText.Position = UDim2.new(0, 0, 0, 8)
+loadingText.Text = "Loading..."
+loadingText.TextColor3 = Color3.fromRGB(255, 255, 255)
+loadingText.Font = Enum.Font.GothamBold
+loadingText.TextSize = 18
+loadingText.BackgroundTransparency = 1
+
+local gameName = Instance.new("TextLabel", container)
+gameName.Size = UDim2.new(1, 0, 0, 20)
+gameName.Position = UDim2.new(0, 0, 0, 30)
+gameName.Text = MarketplaceService:GetProductInfo(game.PlaceId).Name or "Game"
+gameName.TextColor3 = Color3.fromRGB(180, 180, 180)
+gameName.Font = Enum.Font.Gotham
+gameName.TextSize = 13
+gameName.BackgroundTransparency = 1
+
+local barBackground = Instance.new("Frame", container)
+barBackground.Size = UDim2.new(0.9, 0, 0, 14)
+barBackground.Position = UDim2.new(0.05, 0, 1, -24)
+barBackground.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+barBackground.BorderSizePixel = 0
+Instance.new("UICorner", barBackground).CornerRadius = UDim.new(1, 0)
+
+local barFill = Instance.new("Frame", barBackground)
+barFill.Size = UDim2.new(1, 0, 0, 0) 
+barFill.Position = UDim2.new(0, 0, 1, 0) 
+barFill.BackgroundColor3 = themeRed
+barFill.BorderSizePixel = 0
+Instance.new("UICorner", barFill).CornerRadius = UDim.new(1, 0)
+
+local function updateProgressBar(progress)
+    progress = math.clamp(progress, 0, 1)
+
+    local newHeight = 14 * progress 
+    TweenService:Create(
+        barFill,
+        TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+        {
+            Size = UDim2.new(1, 0, 0, newHeight),
+            Position = UDim2.new(0, 0, 1 - progress, 0)
+        }
+    ):Play()
+end
+
+local function fadeOutAndDestroy()
+    local tweenInfo = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
+
+    local propsText = {TextTransparency = 1}
+    local propsBar = {BackgroundTransparency = 1}
+
+    local tweenLoadingText = TweenService:Create(loadingText, tweenInfo, propsText)
+    local tweenGameName = TweenService:Create(gameName, tweenInfo, propsText)
+
+    local tweenBarBackground = TweenService:Create(barBackground, tweenInfo, propsBar)
+    local tweenBarFill = TweenService:Create(barFill, tweenInfo, propsBar)
+
+    tweenLoadingText:Play()
+    tweenGameName:Play()
+    tweenBarBackground:Play()
+    tweenBarFill:Play()
+
+    tweenBarFill.Completed:Connect(
+        function()
+            local tweenContainer =
+                TweenService:Create(
+                container,
+                tweenInfo,
+                {
+                    BackgroundTransparency = 1,
+                    Size = UDim2.new(container.Size.X.Scale, container.Size.X.Offset, 0, 0)
+                }
+            )
+            tweenContainer:Play()
+            tweenContainer.Completed:Connect(
+                function()
+                    gui:Destroy()
+                end
+            )
+        end
+    )
+end
+
+local function finishLoading(elapsed)
+    updateProgressBar(1)
+    loadingText.Text = string.format("Loaded in %.2f seconds", elapsed)
+    wait(1)
+    local playerName = Players.LocalPlayer and Players.LocalPlayer.Name or "Player"
+    loadingText.Text = "Welcome, " .. playerName
+    wait(2)
+
+    fadeOutAndDestroy()
+end
+
+if game:IsLoaded() then
+    finishLoading(0)
+else
+    local progress = 0
+    local loadingComplete = false
+
+    updateProgressBar(0)
+
+    local conn
+    conn =
+        RunService.Heartbeat:Connect(
+        function(dt)
+            if loadingComplete then
+                conn:Disconnect()
+                return
+            end
+            progress = math.min(progress + dt * 0.5, 0.95)
+            updateProgressBar(progress)
+        end
+    )
+
+    game.Loaded:Connect(
+        function()
+            loadingComplete = true
+            local elapsed = tick() - startTime
+            finishLoading(elapsed)
+        end
+    )
+end
