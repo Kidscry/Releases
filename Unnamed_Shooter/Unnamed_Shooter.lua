@@ -4,7 +4,7 @@
 \ \  _"-.  \ \ \  \ \ \/\ \ \ \___  \  \ \ \____  \ \  __<   \ \____ \  
  \ \_\ \_\  \ \_\  \ \____-  \/\_____\  \ \_____\  \ \_\ \_\  \/\_____\ 
   \/_/\/_/   \/_/   \/____/   \/_____/   \/_____/   \/_/ /_/   \/_____/ 
-    Loader : loadstring(game:HttpGet("hhttps://github.com/Kidscry/Releases/blob/main/Unnamed_Shooter/Unnamed_Shooter.lua"))();
+    Loader : loadstring(game:HttpGet("https://github.com/Kidscry/Releases/blob/main/Unnamed_Shooter/Unnamed_Shooter.lua"))();
 ]]
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Kidscry/Releases/refs/heads/main/Utilities/Loader_UI"))();
