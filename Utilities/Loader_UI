@@ -152,3 +152,4 @@ else
         end
     )
 end
+wait(1)
