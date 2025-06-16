@@ -152,4 +152,4 @@ else
         end
     )
 end
-wait(1)
+wait(1.5)
