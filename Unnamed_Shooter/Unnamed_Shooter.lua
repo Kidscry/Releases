@@ -1,6 +1,13 @@
+--[[
+ __  __     __     _____     ______     ______     ______     __  __    
+/\ \/ /    /\ \   /\  __-.  /\  ___\   /\  ___\   /\  == \   /\ \_\ \   
+\ \  _"-.  \ \ \  \ \ \/\ \ \ \___  \  \ \ \____  \ \  __<   \ \____ \  
+ \ \_\ \_\  \ \_\  \ \____-  \/\_____\  \ \_____\  \ \_\ \_\  \/\_____\ 
+  \/_/\/_/   \/_/   \/____/   \/_____/   \/_____/   \/_/ /_/   \/_____/ 
+    Loader : loadstring(game:HttpGet("hhttps://github.com/Kidscry/Releases/blob/main/Unnamed_Shooter/Unnamed_Shooter.lua"))();
+]]
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Kidscry/Releases/refs/heads/main/Utilities/Loader_UI"))();
-
 -- // Dependencies
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kidscry/Releases/main/Utilities/UI.lua"))();
 
