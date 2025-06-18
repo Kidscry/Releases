@@ -6,23 +6,6 @@
   \/_/\/_/   \/_/   \/____/   \/_____/   \/_____/   \/_/ /_/   \/_____/ 
 
 Loader : loadstring(game:HttpGet("https://github.com/Kidscry/Releases/blob/main/Unnamed_Shooter/Unnamed_Shooter.lua"))();
-
-Changelogs:
-06/18/25
-+ Major architectural overhaul using secure module injection & service caching (metatable + rawset optimization).
-+ Hardened environment with optional hook protection & tamper-proof global state (getfenv/setfenv overrides).
-+ Async-safe execution wrapped in `pcall` to prevent runtime halts.
-+ Universal dependency injector with obfuscation-friendly structure.
-+ Drawing FOV circle is dynamically updated and garbage-collected on unload.
-+ Replaced redundant global flags with centralized `State` table for internal state management.
-+ Adaptive `applyAimbot()` function injects dynamic logic into RaycastModule without trace.
-+ Added full UI lifecycle protection (auto unload, base clearing, destroy-safe).
-+ Organized UI creation with config toggles, slider, hotkey, credits, and clipboard support.
-+ Fully modular and ready for anti-cheat hostile environments.
-
-! Legacy logic (inline GetService, unguarded connections, hardcoded globals) removed.
-! Simplified and centralized all player filtering logic in `getClosestTarget()`.
-! Runtime hooks and startup pipeline rewritten for stealth, performance, and clarity.
 ]]
 
 --[[ INITIAL SETUP ]]--
