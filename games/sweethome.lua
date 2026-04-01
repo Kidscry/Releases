@@ -1,27 +1,41 @@
+local player = game.Players.LocalPlayer;
+
 while true do
-    local map = workspace:WaitForChild("Map")
-    local parts = {}
+    local map = workspace:WaitForChild("Map");
+    local character = player.Character;
+    local root = character and character:FindFirstChild("HumanoidRootPart");
 
-    for _, part in pairs(map:GetChildren()) do
-        local prompt = part:FindFirstChild("Prompt")
-        if prompt and prompt:IsA("ProximityPrompt") and prompt.ActionText == "Collect" then
-            table.insert(parts, part)
+    if root then
+        for _, item in pairs(map:GetChildren()) do
+            local prompt = item:FindFirstChild("Prompt");
+
+            if prompt and prompt:IsA("ProximityPrompt") and prompt.ActionText == "Collect" then
+                prompt.HoldDuration = 0;
+                prompt.RequiresLineOfSight = false;
+
+                while item and item.Parent do
+                    prompt = item:FindFirstChild("Prompt");
+                    if not prompt or not prompt.Enabled then
+                        break;
+                    end
+
+                    root.CFrame = item.CFrame + Vector3.new(0, 4, 0);
+
+                    task.wait(0.1);
+
+                    pcall(function()
+                        prompt:InputHoldBegin();
+                        task.wait(0.2);
+                        prompt:InputHoldEnd();
+                    end);
+
+                    task.wait(0.15);
+                end
+
+                task.wait(0.1);
+            end
         end
     end
 
-    for _, part in pairs(parts) do
-        local prompt = part:FindFirstChild("Prompt")
-        local character = game.Players.LocalPlayer.Character
-        if character and character:FindFirstChild("HumanoidRootPart") then
-            pcall(function()
-                character:MoveTo(part.Position + Vector3.new(0, 5, 0))
-                wait(math.random(0.05, 0.15))
-                prompt:InputHoldBegin()
-                wait(0.65)
-                prompt:InputHoldEnd()
-                wait(math.random(0.3, 0.6))
-            end)
-        end
-        wait(0.1)
-    end
+    task.wait(0.5);
 end
